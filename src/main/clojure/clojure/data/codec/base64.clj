@@ -1,5 +1,7 @@
 (ns clojure.data.codec.base64)
 
+(set! *unchecked-math* true)
+
 (def ^:private ^"[B" enc-bytes
   (byte-array
     (map (comp byte int)
@@ -9,22 +11,22 @@
   "Calculates what would be the length after encoding of an input array of length n."
   ^long [^long n]
   (-> n
-    (unchecked-add 2)
+    (+ 2)
     (quot 3)
-    (unchecked-multiply 4)))
+    (* 4)))
 
 (defn encode!
   "Reads from the input byte array for the specified length starting at the offset
    index, and base64 encodes into the output array starting at index 0."
   [^bytes input ^long offset ^long length ^bytes output]
-  (let [tail-len (unchecked-remainder-int length 3)
-        loop-lim (unchecked-subtract (unchecked-add offset length) tail-len)
-        end (unchecked-dec (unchecked-add offset length))]
+  (let [tail-len (rem length 3)
+        loop-lim (- (+ offset length) tail-len)
+        end (dec (+ offset length))]
     (loop [i offset j 0]
       (when (< i loop-lim)
         (let [x (long (aget input i)) ; can only bind long/double prims, and no widening conversion
-              y (long (aget input (unchecked-inc i)))
-              z (long (aget input (unchecked-add 2 i)))
+              y (long (aget input (inc i)))
+              z (long (aget input (+ 2 i)))
               a (-> x
                   (bit-shift-right 2)
                   (bit-and 0x3F))
@@ -44,43 +46,43 @@
               c (bit-or c1 c2)
               d (bit-and z 0x3F)]
           (aset output j (aget enc-bytes a))
-          (aset output (unchecked-inc j) (aget enc-bytes b))
-          (aset output (unchecked-add 2 j) (aget enc-bytes c))
-          (aset output (unchecked-add 3 j) (aget enc-bytes d)))
-        (recur (unchecked-add 3 i) (unchecked-add 4 j))))
+          (aset output (inc j) (aget enc-bytes b))
+          (aset output (+ 2 j) (aget enc-bytes c))
+          (aset output (+ 3 j) (aget enc-bytes d)))
+        (recur (+ 3 i) (+ 4 j))))
     ; add padding:
     (case tail-len
       0 output
       1 (do
           (aset output
-                (unchecked-subtract (alength output) 4)
+                (- (alength output) 4)
                 (aget enc-bytes
                       (-> (aget input end)
                         int
                         (bit-shift-right 2)
                         (bit-and 0x3F))))
           (aset output
-                (unchecked-subtract (alength output) 3)
+                (- (alength output) 3)
                 (aget enc-bytes
                       (-> (aget input end)
                         int
                         (bit-and 0x3)
                         (bit-shift-left 4))))
-          (aset output (unchecked-subtract (alength output) 2) (byte 61))
-          (aset output (unchecked-dec (alength output)) (byte 61))
+          (aset output (- (alength output) 2) (byte 61))
+          (aset output (dec (alength output)) (byte 61))
           output)
       2 (do
           (aset output
-                (unchecked-subtract (alength output) 4)
+                (- (alength output) 4)
                 (aget enc-bytes
-                      (-> (aget input (unchecked-dec end))
+                      (-> (aget input (dec end))
                         int
                         (bit-shift-right 2)
                         (bit-and 0x3F))))
           (aset output
-                (unchecked-subtract (alength output) 3)
+                (- (alength output) 3)
                 (aget enc-bytes
-                      (-> (aget input (unchecked-dec end))
+                      (-> (aget input (dec end))
                         int
                         (bit-and 0x3)
                         (bit-shift-left 4)
@@ -89,13 +91,13 @@
                                   (bit-shift-right 4)
                                   (bit-and 0xF))))))
           (aset output
-                (unchecked-subtract (alength output) 2)
+                (- (alength output) 2)
                 (aget enc-bytes
                       (-> (aget input end)
                         int
                         (bit-and 0xF)
                         (bit-shift-left 2))))
-          (aset output (unchecked-dec (alength output)) (byte 61))
+          (aset output (dec (alength output)) (byte 61))
           nil))))
 
 (defn encode
@@ -106,4 +108,3 @@
     (let [dest (byte-array (enc-length length))]
       (encode! input offset length dest)
       dest)))
-
