@@ -11,16 +11,16 @@
     (take n)
     (byte-array)))
 
-(deftest correctness
-  (doseq [n (range 1 100)]
+(deftest enc-correctness
+  (doseq [n (concat (range 1 6) (range 1001 1006))]
     (is (let [input (rand-bytes n)
               a1 (encode input)
               a2 (Base64/encodeBase64 input)]
           (= (into [] a1) (into [] a2))))))
 
-(deftest offset-correctness
-  (doseq [n (range 1 100)]
-    (doseq [off (range 1 n)]
+(deftest offset-enc-correctness
+  (doseq [n (concat (range 1 6) (range 1001 1006))]
+    (doseq [off (range 1 (min n 5))]
       (is (let [input (rand-bytes n)
                 len (- n off)
                 a1 (encode input off len)
@@ -29,11 +29,35 @@
                 a2 (Base64/encodeBase64 input2)]
             (= (into [] a1) (into [] a2)))))))
 
-(deftest buffer-correctness
-  (doseq [n (range 1 100)]
+(deftest buffer-enc-correctness
+  (doseq [n (concat (range 1 6) (range 1001 1006))]
     (doseq [excess-buf-len (range 1 10)]
       (is (let [input (rand-bytes n)
                 output (byte-array (+ (enc-length n) excess-buf-len))
                 _ (encode! input 0 n output)
                 a2 (Base64/encodeBase64 input)]
             (= (into [] (take (enc-length n) output)) (into [] a2)))))))
+
+(deftest dec-correctness
+  (doseq [n (concat (range 1 6) (range 1001 1006))]
+    (is (let [orig (rand-bytes n)
+              enc (encode orig)
+              deco (decode enc)]
+          (= (into [] deco) (into [] orig))))))
+
+(deftest offset-dec-correctness
+  (doseq [n (concat (range 1 6) (range 1001 1006))]
+    (doseq [off (range 1 (min n 5))]
+      (is (let [orig (rand-bytes n)
+                enc (byte-array (concat (repeat off (byte 0)) (encode orig)))
+                deco (decode enc off (- (alength enc) off))]
+            (= (into [] deco) (into [] orig)))))))
+
+(deftest buffer-dec-correctness
+  (doseq [n (concat (range 1 6) (range 1001 1006))]
+    (doseq [excess-buf-len (range 1 10)]
+      (is (let [orig (rand-bytes n)
+                enc (encode orig)
+                deco (byte-array (+ n excess-buf-len))
+                _ (decode! enc 0 (alength ^bytes enc) deco)]
+            (= (into [] (take n deco)) (into [] orig)))))))
