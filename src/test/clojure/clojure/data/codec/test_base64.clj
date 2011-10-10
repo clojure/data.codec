@@ -3,6 +3,8 @@
   (:use clojure.test
         clojure.data.codec.base64))
 
+(set! *warn-on-reflection* true)
+
 (defn rand-bytes [n]
   (->> #(byte (- (rand-int 256) 128))
     repeatedly
@@ -26,3 +28,12 @@
                 _ (System/arraycopy input off input2 0 len)
                 a2 (Base64/encodeBase64 input2)]
             (= (into [] a1) (into [] a2)))))))
+
+(deftest buffer-correctness
+  (doseq [n (range 1 100)]
+    (doseq [excess-buf-len (range 1 10)]
+      (is (let [input (rand-bytes n)
+                output (byte-array (+ (enc-length n) excess-buf-len))
+                _ (encode! input 0 n output)
+                a2 (Base64/encodeBase64 input)]
+            (= (into [] (take (enc-length n) output)) (into [] a2)))))))
