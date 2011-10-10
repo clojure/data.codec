@@ -1,6 +1,7 @@
 (ns clojure.data.codec.base64)
 
 (set! *unchecked-math* true)
+(set! *warn-on-reflection* true)
 
 (def ^:private ^"[B" enc-bytes
   (byte-array
@@ -21,7 +22,8 @@
   [^bytes input ^long offset ^long length ^bytes output]
   (let [tail-len (rem length 3)
         loop-lim (- (+ offset length) tail-len)
-        end (dec (+ offset length))]
+        in-end (dec (+ offset length))
+        out-end (dec (enc-length length))]
     (loop [i offset j 0]
       (when (< i loop-lim)
         (let [x (long (aget input i)) ; can only bind long/double prims, and no widening conversion
@@ -55,49 +57,49 @@
       0 output
       1 (do
           (aset output
-                (- (alength output) 4)
+                (- out-end 3)
                 (aget enc-bytes
-                      (-> (aget input end)
+                      (-> (aget input in-end)
                         int
                         (bit-shift-right 2)
                         (bit-and 0x3F))))
           (aset output
-                (- (alength output) 3)
+                (- out-end 2)
                 (aget enc-bytes
-                      (-> (aget input end)
+                      (-> (aget input in-end)
                         int
                         (bit-and 0x3)
                         (bit-shift-left 4))))
-          (aset output (- (alength output) 2) (byte 61))
-          (aset output (dec (alength output)) (byte 61))
+          (aset output (dec out-end) (byte 61))
+          (aset output out-end (byte 61))
           output)
       2 (do
           (aset output
-                (- (alength output) 4)
+                (- out-end 3)
                 (aget enc-bytes
-                      (-> (aget input (dec end))
+                      (-> (aget input (dec in-end))
                         int
                         (bit-shift-right 2)
                         (bit-and 0x3F))))
           (aset output
-                (- (alength output) 3)
+                (- out-end 2)
                 (aget enc-bytes
-                      (-> (aget input (dec end))
+                      (-> (aget input (dec in-end))
                         int
                         (bit-and 0x3)
                         (bit-shift-left 4)
-                        (bit-or (-> (aget input end)
+                        (bit-or (-> (aget input in-end)
                                   int
                                   (bit-shift-right 4)
                                   (bit-and 0xF))))))
           (aset output
-                (- (alength output) 2)
+                (dec out-end)
                 (aget enc-bytes
-                      (-> (aget input end)
+                      (-> (aget input in-end)
                         int
                         (bit-and 0xF)
                         (bit-shift-left 2))))
-          (aset output (dec (alength output)) (byte 61))
+          (aset output out-end (byte 61))
           nil))))
 
 (defn encode
