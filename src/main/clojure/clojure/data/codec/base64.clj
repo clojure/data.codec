@@ -1,4 +1,5 @@
-(ns clojure.data.codec.base64)
+(ns clojure.data.codec.base64
+  (:import [java.io InputStream OutputStream]))
 
 (set! *unchecked-math* true)
 (set! *warn-on-reflection* true)
@@ -34,11 +35,11 @@
 (defn pad-length ^long [^bytes input ^long offset ^long length]
   "Returns the length of padding on the end of the input array."
   (let [end (+ offset length -1)]
-    (if (== 61 (long (aget input (dec end))))
-      2
-      (if (== 61 (long (aget input end)))
-        1
-        0))))
+    (if (== 61 (long (aget input end)))
+      (if (== 61 (long (aget input (dec end))))
+        2
+        1)
+      0)))
 
 (defn decode!
   "Reads from the input byte array for the specified length starting at the offset
@@ -135,7 +136,9 @@
 (defn encode!
   "Reads from the input byte array for the specified length starting at the offset
    index, and base64 encodes into the output array starting at index 0. Returns the
-   length written to output."
+   length written to output.
+
+   Note: if using partial input, length must be a multiple of 3 to avoid padding."
   [^bytes input ^long offset ^long length ^bytes output]
   (let [tail-len (rem length 3)
         loop-lim (- (+ offset length) tail-len)
@@ -171,7 +174,7 @@
           (aset output (+ 3 j) (aget enc-bytes d)))
         (recur (+ 3 i) (+ 4 j))))
     ; write padded section
-    (case tail-len
+    (case (int tail-len)
       0 nil
       1 (let [i in-end
               j (- out-end 3)
@@ -217,3 +220,51 @@
     (let [dest (byte-array (enc-length length))]
       (encode! input offset length dest)
       dest)))
+
+
+(defn- read-fully
+  "Will fill the buffer to capacity, or with whatever is left in the input.
+   Returns the bytes read."
+  ; This is necessary since a partil fill from .read does not necessarily mean EOS,
+  ; and we need full buffers to avoid incorrect padding.
+  [^InputStream input ^bytes buf]
+  (loop [off 0 len (alength buf)]
+    (if (pos? len)
+      (let [in-size (.read input buf off len)]
+        (if (pos? in-size)
+          (recur (+ off in-size) (- len in-size))
+          off))
+      off)))
+
+(defn decoding-transfer
+  "Base64 decodes from input stream to output stream. If buffer lengths are provided,
+   in-buf-len must be a multiple of 4, and out-buf-len must be a multiple of 3 and
+   large enough to hold the decoded contents of in-buf."
+  ([input output]
+    (decoding-transfer input output 1368 1026))
+  ([^InputStream input ^OutputStream output in-buf-len out-buf-len]
+  (loop []
+    (let [in-buf (byte-array in-buf-len)
+          out-buf (byte-array out-buf-len)
+          in-size (read-fully input in-buf)]
+      (when (pos? in-size)
+        (let [out-size (decode! in-buf 0 in-size out-buf)]
+          (.write output out-buf 0 out-size)
+          (recur)))))))
+
+(defn encoding-transfer
+  "Base64 encodes from input stream to output stream. If buffer lengths are provided,
+   in-buf-len must be a multiple of 3, and out-buf-len must be a multiple of 4 and
+   large enough to hold the encoded contents of in-buf."
+  ([input output]
+    (encoding-transfer input output 1026 1368))
+  ([^InputStream input ^OutputStream output in-buf-len out-buf-len]
+  (loop []
+    (let [in-buf (byte-array in-buf-len)
+          out-buf (byte-array out-buf-len)
+          in-size (read-fully input in-buf)]
+      (when (pos? in-size)
+        (let [out-size (encode! in-buf 0 in-size out-buf)]
+          (.write output out-buf 0 out-size)
+          (recur)))))))
+

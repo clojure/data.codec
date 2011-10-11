@@ -1,5 +1,6 @@
 (ns clojure.data.codec.test-base64
-  (:import org.apache.commons.codec.binary.Base64)
+  (:import org.apache.commons.codec.binary.Base64
+           [java.io ByteArrayInputStream ByteArrayOutputStream])
   (:use clojure.test
         clojure.data.codec.base64))
 
@@ -61,3 +62,37 @@
                 deco (byte-array (+ n excess-buf-len))
                 _ (decode! enc 0 (alength ^bytes enc) deco)]
             (= (into [] (take n deco)) (into [] orig)))))))
+
+(deftest fit-encoding-transfer
+  (let [raw (rand-bytes 1026)
+        in (ByteArrayInputStream. raw)
+        out (ByteArrayOutputStream.)]
+    (encoding-transfer in out)
+    (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
+
+(deftest split-encoding-transfer
+  (let [raw (rand-bytes 2026)
+        in (ByteArrayInputStream. raw)
+        out (ByteArrayOutputStream.)]
+    (encoding-transfer in out)
+    (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
+
+(deftest fit-decoding-transfer
+  (let [raw (rand-bytes 1368)
+        enc (encode raw)
+        in (ByteArrayInputStream. enc)
+        out (ByteArrayOutputStream.)]
+    (decoding-transfer in out)
+    (is (= (into [] (.toByteArray out)) (into [] raw)))))
+
+(deftest split-decoding-transfer
+  (let [raw (rand-bytes 2368)
+        enc (encode raw)
+        in (ByteArrayInputStream. enc)
+        out (ByteArrayOutputStream.)]
+    (decoding-transfer in out)
+    (is (= (into [] (.toByteArray out)) (into [] raw)))))
+
+
+
+
