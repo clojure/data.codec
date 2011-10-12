@@ -64,21 +64,21 @@
             (= (into [] (take n deco)) (into [] orig)))))))
 
 (deftest fit-encoding-transfer
-  (let [raw (rand-bytes 1026)
+  (let [raw (rand-bytes 6144)
         in (ByteArrayInputStream. raw)
         out (ByteArrayOutputStream.)]
     (encoding-transfer in out)
     (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
 
 (deftest split-encoding-transfer
-  (let [raw (rand-bytes 2026)
+  (let [raw (rand-bytes 7144)
         in (ByteArrayInputStream. raw)
         out (ByteArrayOutputStream.)]
     (encoding-transfer in out)
     (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
 
 (deftest fit-decoding-transfer
-  (let [raw (rand-bytes 1368)
+  (let [raw (rand-bytes 8192)
         enc (encode raw)
         in (ByteArrayInputStream. enc)
         out (ByteArrayOutputStream.)]
@@ -86,7 +86,7 @@
     (is (= (into [] (.toByteArray out)) (into [] raw)))))
 
 (deftest split-decoding-transfer
-  (let [raw (rand-bytes 2368)
+  (let [raw (rand-bytes 9192)
         enc (encode raw)
         in (ByteArrayInputStream. enc)
         out (ByteArrayOutputStream.)]
