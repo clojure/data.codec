@@ -249,35 +249,45 @@
           off))
       off)))
 
+(defn- buf-size [opts default multiple-of]
+  (if-let [in-size (:buffer-size opts)]
+    (if (zero? (rem in-size multiple-of))
+      in-size
+      (throw (IllegalArgumentException. ^String (format "Buffer size must be a multiple of %d." multiple-of))))
+    default))
+
+(defn- enc-bufs [opts]
+  (let [in-size (buf-size opts 1026 3)
+        out-size (enc-length in-size)]
+    [(byte-array in-size) (byte-array out-size)]))
+
+(defn- dec-bufs [opts]
+  (let [in-size (buf-size opts 1368 4)
+        out-size (dec-length in-size 0)]
+    [(byte-array in-size) (byte-array out-size)]))
+
+(defn- do-transfer [^InputStream input ^OutputStream output opts buf-fn tx-fn]
+  (let [[in-buf out-buf] (buf-fn opts)]
+    (loop []
+      (let [in-size (read-fully input in-buf)]
+        (when (pos? in-size)
+          (let [out-size (tx-fn in-buf 0 in-size out-buf)]
+            (.write output out-buf 0 out-size)
+            (recur)))))))
+
 (defn decoding-transfer
-  "Base64 decodes from input stream to output stream. If buffer lengths are provided,
-   in-buf-len must be a multiple of 4, and out-buf-len must be a multiple of 3 and
-   large enough to hold the decoded contents of in-buf."
-  ([input output]
-    (decoding-transfer input output 1368 1026))
-  ([^InputStream input ^OutputStream output in-buf-len out-buf-len]
-  (loop []
-    (let [in-buf (byte-array in-buf-len)
-          out-buf (byte-array out-buf-len)
-          in-size (read-fully input in-buf)]
-      (when (pos? in-size)
-        (let [out-size (decode! in-buf 0 in-size out-buf)]
-          (.write output out-buf 0 out-size)
-          (recur)))))))
+  "Base64 decodes from input-stream to output-stream. Returns nil or throws IOException.
+
+  Options are key/value pairs and may be one of
+    :buffer-size  read buffer size to use, must be a multiple of 4; default is 1368."
+  [input-stream output-stream & opts]
+  (do-transfer input-stream output-stream (when opts (apply hash-map opts)) dec-bufs decode!))
 
 (defn encoding-transfer
-  "Base64 encodes from input stream to output stream. If buffer lengths are provided,
-   in-buf-len must be a multiple of 3, and out-buf-len must be a multiple of 4 and
-   large enough to hold the encoded contents of in-buf."
-  ([input output]
-    (encoding-transfer input output 1026 1368))
-  ([^InputStream input ^OutputStream output in-buf-len out-buf-len]
-  (loop []
-    (let [in-buf (byte-array in-buf-len)
-          out-buf (byte-array out-buf-len)
-          in-size (read-fully input in-buf)]
-      (when (pos? in-size)
-        (let [out-size (encode! in-buf 0 in-size out-buf)]
-          (.write output out-buf 0 out-size)
-          (recur)))))))
+  "Base64 encodes from input-stream to output-stream. Returns nil or throws IOException.
+
+  Options are key/value pairs and may be one of
+    :buffer-size  read buffer size to use, must be a multiple of 3; default is 1026."
+  [input-stream output-stream & opts]
+  (do-transfer input-stream output-stream (when opts (apply hash-map opts)) enc-bufs encode!))
 
