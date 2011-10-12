@@ -187,7 +187,7 @@
           (aset output (+ 3 j) (aget enc-bytes d)))
         (recur (+ 3 i) (+ 4 j))))
     ; write padded section
-    (case (int tail-len)
+    (case tail-len
       0 nil
       1 (let [i in-end
               j (- out-end 3)
@@ -238,7 +238,7 @@
 (defn- read-fully
   "Will fill the buffer to capacity, or with whatever is left in the input.
    Returns the bytes read."
-  ; This is necessary since a partil fill from .read does not necessarily mean EOS,
+  ; This is necessary since a partial fill from .read does not necessarily mean EOS,
   ; and we need full buffers to avoid incorrect padding.
   [^InputStream input ^bytes buf]
   (loop [off 0 len (alength buf)]
