@@ -256,38 +256,33 @@
       (throw (IllegalArgumentException. ^String (format "Buffer size must be a multiple of %d." multiple-of))))
     default))
 
-(defn- enc-bufs [opts]
-  (let [in-size (buf-size opts 1026 3)
-        out-size (enc-length in-size)]
-    [(byte-array in-size) (byte-array out-size)]))
-
-(defn- dec-bufs [opts]
-  (let [in-size (buf-size opts 1368 4)
-        out-size (dec-length in-size 0)]
-    [(byte-array in-size) (byte-array out-size)]))
-
-(defn- do-transfer [^InputStream input ^OutputStream output opts buf-fn tx-fn]
-  (let [[in-buf out-buf] (buf-fn opts)]
-    (loop []
-      (let [in-size (read-fully input in-buf)]
-        (when (pos? in-size)
-          (let [out-size (tx-fn in-buf 0 in-size out-buf)]
-            (.write output out-buf 0 out-size)
-            (recur)))))))
+(defn- do-transfer [^InputStream input ^OutputStream output opts in-buf out-buf tx-fn]
+  (loop []
+    (let [in-size (read-fully input in-buf)]
+      (when (pos? in-size)
+        (let [out-size (tx-fn in-buf 0 in-size out-buf)]
+          (.write output out-buf 0 out-size)
+          (recur))))))
 
 (defn decoding-transfer
   "Base64 decodes from input-stream to output-stream. Returns nil or throws IOException.
 
   Options are key/value pairs and may be one of
-    :buffer-size  read buffer size to use, must be a multiple of 4; default is 1368."
+    :buffer-size  read buffer size to use, must be a multiple of 4; default is 8192."
   [input-stream output-stream & opts]
-  (do-transfer input-stream output-stream (when opts (apply hash-map opts)) dec-bufs decode!))
+  (let [in-size (buf-size opts 8192 4)
+        out-size (dec-length in-size 0)]
+    (do-transfer input-stream output-stream (when opts (apply hash-map opts))
+                 (byte-array in-size) (byte-array out-size) decode!)))
 
 (defn encoding-transfer
   "Base64 encodes from input-stream to output-stream. Returns nil or throws IOException.
 
   Options are key/value pairs and may be one of
-    :buffer-size  read buffer size to use, must be a multiple of 3; default is 1026."
+    :buffer-size  read buffer size to use, must be a multiple of 3; default is 6144."
   [input-stream output-stream & opts]
-  (do-transfer input-stream output-stream (when opts (apply hash-map opts)) enc-bufs encode!))
+  (let [in-size (buf-size opts 6144 3)
+        out-size (enc-length in-size)]
+    (do-transfer input-stream output-stream (when opts (apply hash-map opts))
+                 (byte-array in-size) (byte-array out-size) encode!)))
 
