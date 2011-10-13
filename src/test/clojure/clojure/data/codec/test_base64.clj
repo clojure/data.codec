@@ -63,37 +63,6 @@
                 _ (decode! enc 0 (alength ^bytes enc) deco)]
             (= (into [] (take n deco)) (into [] orig)))))))
 
-(deftest fit-encoding-transfer
-  (let [raw (rand-bytes 6144)
-        in (ByteArrayInputStream. raw)
-        out (ByteArrayOutputStream.)]
-    (encoding-transfer in out)
-    (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
-
-(deftest split-encoding-transfer
-  (let [raw (rand-bytes 7144)
-        in (ByteArrayInputStream. raw)
-        out (ByteArrayOutputStream.)]
-    (encoding-transfer in out)
-    (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
-
-(deftest fit-decoding-transfer
-  (let [raw (rand-bytes 8192)
-        enc (encode raw)
-        in (ByteArrayInputStream. enc)
-        out (ByteArrayOutputStream.)]
-    (decoding-transfer in out)
-    (is (= (into [] (.toByteArray out)) (into [] raw)))))
-
-(deftest split-decoding-transfer
-  (let [raw (rand-bytes 9192)
-        enc (encode raw)
-        in (ByteArrayInputStream. enc)
-        out (ByteArrayOutputStream.)]
-    (decoding-transfer in out)
-    (is (= (into [] (.toByteArray out)) (into [] raw)))))
-
-
 (deftest bad-buf-encoding-transfer
   (is (thrown-with-msg? IllegalArgumentException #"Buffer size must be a multiple of"
     (encoding-transfer nil nil :buffer-size 5))))
@@ -101,5 +70,30 @@
 (deftest bad-buf-decoding-transfer
   (is (thrown-with-msg? IllegalArgumentException #"Buffer size must be a multiple of"
     (decoding-transfer nil nil :buffer-size 5))))
+
+(deftest fit-encoding-transfer
+  (let [raw (rand-bytes 3)
+        in (ByteArrayInputStream. raw)
+        out (ByteArrayOutputStream.)]
+    (encoding-transfer in out :buffer-size 3)
+    (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
+
+(deftest split-encoding-transfer
+  (let [raw (rand-bytes 4)
+        in (ByteArrayInputStream. raw)
+        out (ByteArrayOutputStream.)]
+    (encoding-transfer in out :buffer-size 3)
+    (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
+
+(deftest fit-decoding-transfer
+  (let [raw (rand-bytes 3)
+        enc (encode raw)
+        in (ByteArrayInputStream. enc)
+        out (ByteArrayOutputStream.)]
+    (decoding-transfer in out :buffer-size 4)
+    (is (= (into [] (.toByteArray out)) (into [] raw)))))
+
+
+
 
 

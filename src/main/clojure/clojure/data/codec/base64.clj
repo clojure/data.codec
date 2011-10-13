@@ -36,17 +36,19 @@
     (quot 3)
     (* 4)))
 
-(defn dec-length ^long [^long in-length ^long pad-length]
+(defn dec-length
   "Calculates what would be the length after decoding of an input array of length
    in-length with the specified padding length."
+  ^long [^long in-length ^long pad-length]
   (-> in-length
     (quot 4)
     (* 3)
     (- pad-length)))
 
 
-(defn pad-length ^long [^bytes input ^long offset ^long length]
+(defn pad-length
   "Returns the length of padding on the end of the input array."
+  ^long [^bytes input ^long offset ^long length]
   (let [end (+ offset length -1)]
     (if (== 61 (long (aget input end)))
       (if (== 61 (long (aget input (dec end))))
@@ -60,7 +62,7 @@
    length written to output.
 
    Note: length must be a multiple of 4."
-  [^bytes input ^long offset ^long length ^bytes output]
+  ^long [^bytes input ^long offset ^long length ^bytes output]
   (let [in-end (+ offset length -1)
         pad-len (pad-length input offset length)
         out-len (dec-length length pad-len)
@@ -152,7 +154,7 @@
    length written to output.
 
    Note: if using partial input, length must be a multiple of 3 to avoid padding."
-  [^bytes input ^long offset ^long length ^bytes output]
+  ^long [^bytes input ^long offset ^long length ^bytes output]
   (let [tail-len (rem length 3)
         loop-lim (- (+ offset length) tail-len)
         in-end (dec (+ offset length))
@@ -240,51 +242,54 @@
    Returns the bytes read."
   ; This is necessary since a partial fill from .read does not necessarily mean EOS,
   ; and we need full buffers to avoid incorrect padding.
-  [^InputStream input ^bytes buf]
+  ^long [^InputStream input ^bytes buf]
   (loop [off 0 len (alength buf)]
-    (if (pos? len)
-      (let [in-size (.read input buf off len)]
-        (if (pos? in-size)
-          (recur (+ off in-size) (- len in-size))
-          off))
-      off)))
+    (let [in-size (.read input buf off len)]
+      (cond
+        (== in-size len) (+ off in-size)
+        (neg? in-size) off
+        :else (recur (+ off in-size) (- len in-size))))))
 
-(defn- buf-size [opts default multiple-of]
+(defn- buf-size ^long [opts ^long default ^long multiple-of]
   (if-let [in-size (:buffer-size opts)]
     (if (zero? (rem in-size multiple-of))
       in-size
       (throw (IllegalArgumentException. ^String (format "Buffer size must be a multiple of %d." multiple-of))))
     default))
 
-(defn- do-transfer [^InputStream input ^OutputStream output in-buf out-buf tx-fn]
-  (loop []
-    (let [in-size (read-fully input in-buf)]
-      (when (pos? in-size)
-        (let [out-size (tx-fn in-buf 0 in-size out-buf)]
-          (.write output out-buf 0 out-size)
-          (recur))))))
-
 (defn decoding-transfer
   "Base64 decodes from input-stream to output-stream. Returns nil or throws IOException.
 
   Options are key/value pairs and may be one of
     :buffer-size  read buffer size to use, must be a multiple of 4; default is 8192."
-  [input-stream output-stream & opts]
+  [^InputStream input-stream ^OutputStream output-stream & opts]
   (let [opts (when opts (apply hash-map opts))
         in-size (buf-size opts 8192 4)
-        out-size (dec-length in-size 0)]
-    (do-transfer input-stream output-stream
-                 (byte-array in-size) (byte-array out-size) decode!)))
+        out-size (if (== in-size 8192) 6144 (dec-length in-size 0))
+        in-buf (byte-array in-size)
+        out-buf (byte-array out-size)]
+    (loop []
+      (let [in-size (read-fully input-stream in-buf)]
+        (when (pos? in-size)
+          (let [out-size (decode! in-buf 0 in-size out-buf)]
+            (.write output-stream out-buf 0 out-size)
+            (recur)))))))
 
 (defn encoding-transfer
   "Base64 encodes from input-stream to output-stream. Returns nil or throws IOException.
 
   Options are key/value pairs and may be one of
     :buffer-size  read buffer size to use, must be a multiple of 3; default is 6144."
-  [input-stream output-stream & opts]
+  [^InputStream input-stream ^OutputStream output-stream & opts]
   (let [opts (when opts (apply hash-map opts))
         in-size (buf-size opts 6144 3)
-        out-size (enc-length in-size)]
-    (do-transfer input-stream output-stream
-                 (byte-array in-size) (byte-array out-size) encode!)))
+        out-size (if (== in-size 6144) 8192 (enc-length in-size))
+        in-buf (byte-array in-size)
+        out-buf (byte-array out-size)]
+    (loop []
+      (let [in-size (read-fully input-stream in-buf)]
+        (when (pos? in-size)
+          (let [out-size (encode! in-buf 0 in-size out-buf)]
+            (.write output-stream out-buf 0 out-size)
+            (recur)))))))
 
