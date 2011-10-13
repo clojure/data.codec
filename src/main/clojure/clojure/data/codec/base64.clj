@@ -256,7 +256,7 @@
       (throw (IllegalArgumentException. ^String (format "Buffer size must be a multiple of %d." multiple-of))))
     default))
 
-(defn- do-transfer [^InputStream input ^OutputStream output opts in-buf out-buf tx-fn]
+(defn- do-transfer [^InputStream input ^OutputStream output in-buf out-buf tx-fn]
   (loop []
     (let [in-size (read-fully input in-buf)]
       (when (pos? in-size)
@@ -270,9 +270,10 @@
   Options are key/value pairs and may be one of
     :buffer-size  read buffer size to use, must be a multiple of 4; default is 8192."
   [input-stream output-stream & opts]
-  (let [in-size (buf-size opts 8192 4)
+  (let [opts (when opts (apply hash-map opts))
+        in-size (buf-size opts 8192 4)
         out-size (dec-length in-size 0)]
-    (do-transfer input-stream output-stream (when opts (apply hash-map opts))
+    (do-transfer input-stream output-stream
                  (byte-array in-size) (byte-array out-size) decode!)))
 
 (defn encoding-transfer
@@ -281,8 +282,9 @@
   Options are key/value pairs and may be one of
     :buffer-size  read buffer size to use, must be a multiple of 3; default is 6144."
   [input-stream output-stream & opts]
-  (let [in-size (buf-size opts 6144 3)
+  (let [opts (when opts (apply hash-map opts))
+        in-size (buf-size opts 6144 3)
         out-size (enc-length in-size)]
-    (do-transfer input-stream output-stream (when opts (apply hash-map opts))
+    (do-transfer input-stream output-stream
                  (byte-array in-size) (byte-array out-size) encode!)))
 
