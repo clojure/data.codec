@@ -94,5 +94,12 @@
     (is (= (into [] (.toByteArray out)) (into [] raw)))))
 
 
+(deftest bad-buf-encoding-transfer
+  (is (thrown-with-msg? IllegalArgumentException #"Buffer size must be a multiple of"
+    (encoding-transfer nil nil :buffer-size 5))))
+
+(deftest bad-buf-decoding-transfer
+  (is (thrown-with-msg? IllegalArgumentException #"Buffer size must be a multiple of"
+    (decoding-transfer nil nil :buffer-size 5))))
 
 
