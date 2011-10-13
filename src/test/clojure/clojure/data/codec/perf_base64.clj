@@ -68,13 +68,22 @@
 (defn enc-clj-buf
   "Returns a lazy sequence of encode! timings for the given sequence of byte arrays."
   [bas sleep]
-  (let [out (memoize (fn [n] (byte-array (enc-length n))))]
-    (for [^bytes ba bas]
-      (let [len (alength ba)
-            output (out len)]
-        (do
-          (Thread/sleep sleep)
-          (time-it (encode! ba 0 len output)))))))
+  (for [^bytes ba bas]
+    (let [len (alength ba)
+          output (enc-length len)]
+      (do
+        (Thread/sleep sleep)
+        (time-it (encode! ba 0 len output))))))
+
+(defn enc-clj-xfer
+  "Returns a lazy sequence of encoding-transfer timings for the given sequence of byte arrays."
+  [bas sleep]
+  (for [^bytes ba bas]
+    (let [input (io/input-stream ba)
+          output (ByteArrayOutputStream. (enc-length (alength ba)))]
+      (do
+        (Thread/sleep sleep)
+        (time-it (encoding-transfer input output))))))
 
 (defn enc-apache
   "Returns a lazy sequence of apache base64 encode timings for the given sequence of
@@ -96,13 +105,22 @@
 (defn dec-clj-buf
   "Returns a lazy sequence of decode! timings for the given sequence of byte arrays."
   [bas sleep]
-  (let [out (memoize (fn [n] (byte-array (enc-length n))))]
-    (for [^bytes ba bas]
-      (let [len (alength ba)
-            output (out len)]
-        (do
-          (Thread/sleep sleep)
-          (time-it (decode! ba 0 len output)))))))
+  (for [^bytes ba bas]
+    (let [len (alength ba)
+          output (dec-length len 0)]
+      (do
+        (Thread/sleep sleep)
+        (time-it (decode! ba 0 len output))))))
+
+(defn dec-clj-xfer
+  "Returns a lazy sequence of decoding-transfer timings for the given sequence of byte arrays."
+  [bas sleep]
+  (for [^bytes ba bas]
+    (let [input (io/input-stream ba)
+          output (ByteArrayOutputStream. (dec-length (alength ba) 0))]
+      (do
+        (Thread/sleep sleep)
+        (time-it (decoding-transfer input output))))))
 
 (defn dec-apache
   "Returns a lazy sequence of apache base64 decode timings for the given sequence of
