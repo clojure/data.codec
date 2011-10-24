@@ -1,5 +1,6 @@
 (ns clojure.data.codec.perf-base64
-  (:import java.io.PrintWriter org.apache.commons.codec.binary.Base64)
+  (:import [java.io ByteArrayOutputStream PrintWriter]
+           org.apache.commons.codec.binary.Base64)
   (:require [clojure.java.io :as io]
             [clojure.string :as str])
   (:use clojure.data.codec.base64))
