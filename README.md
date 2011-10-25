@@ -2,6 +2,8 @@
 
 Native codec implementations. Currently only base64 has been implemented.
 
+API documentation: http://clojure.github.com/data.codec
+
 ## base64
 
 Implements the standard base64 encoding character set, but does not yet support automatic fixed line-length encoding.
