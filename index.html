@@ -45,32 +45,49 @@ namespace.
                 <div id="right-sidebar"><div id="toc">
   <h1 class="nopad">Table of Contents</h1>
   <div style="margin-left: 1em;" class="toc-section">
-    <a href="#toc0">Overview</a>
+    <a href="#toc0" style="margin-top: 3px;">Overview</a>
+    
+  </div><div style="margin-left: 1em;" class="toc-section">
+    <a href="#" style="margin-top: 3px;"></a>
+    
+  </div><div style="margin-left: 1em;" class="toc-section">
+    <a href="#" style="margin-top: 3px;"></a>
+    
+  </div><div style="margin-left: 1em;" class="toc-section">
+    <a href="#var-section" style="margin-top: 3px;">Vars and Functions</a>
     <div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/dec-length">dec-length</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/dec-length">dec-length</a>
+      
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/decode">decode</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/decode">decode</a>
+      
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/decode!">decode!</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/decode!">decode!</a>
+      
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/decoding-transfer">decoding-transfer</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/decoding-transfer">decoding-transfer</a>
+      
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/enc-length">enc-length</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/enc-length">enc-length</a>
+      
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/encode">encode</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/encode">encode</a>
+      
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/encode!">encode!</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/encode!">encode!</a>
+      
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/encoding-transfer">encoding-transfer</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/encoding-transfer">encoding-transfer</a>
+      
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#clojure.data.codec.base64/pad-length">pad-length</a>
+      <a class="toc-entry-anchor" href="#clojure.data.codec.base64/pad-length">pad-length</a>
+      
     </div>
-    <br />
   </div>
 </div>
 </div>
-                <div id="content-tag"><h1 id="overview">API for <span id="namespace-name">clojure.data.codec.base64</span>
-  - <span id="header-project">Native codec implementations</span> <span id="header-version">0.1.1</span> (<span id="header-status">in development</span>)
+                <div id="content-tag"><h1 id="overview">API for <span id="clojure.data.codec.base64">clojure.data.codec.base64</span>
+  - <span id="header-project">Native codec implementations</span> <span id="header-version">0.1.1</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
   </h1>
 <span id="author-line">by <span id="author-name">Alex Taggart</span><br /></span>
 <br />Full namespace name: <span id="long-name">clojure.data.codec.base64</span>
@@ -80,125 +97,131 @@ namespace.
 
 
 <br />
-<h2>Public Variables and Functions</h2>
-<div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/dec-length">dec-length</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (dec-length in-length pad-length)
+
+
+
+<div id="var-section">
+  <p></p>
+  <h2>Public Variables and Functions</h2>
+  <div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/dec-length">dec-length</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (dec-length in-length pad-length)
 </pre>
-  <pre id="var-docstr">Calculates what would be the length after decoding of an input array of length
+    <pre id="var-docstr">Calculates what would be the length after decoding of an input array of length
 in-length with the specified padding length.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L39" id="var-source">Source</a>
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/decode">decode</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (decode input)
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L39" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/decode">decode</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (decode input)
        (decode input offset length)
 </pre>
-  <pre id="var-docstr">Returns a base64 decoded byte array.
+    <pre id="var-docstr">Returns a base64 decoded byte array.
 
 Note: length must be a multiple of 4.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L139" id="var-source">Source</a>
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/decode!">decode!</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (decode! input offset length output)
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L139" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/decode!">decode!</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (decode! input offset length output)
 </pre>
-  <pre id="var-docstr">Reads from the input byte array for the specified length starting at the offset
+    <pre id="var-docstr">Reads from the input byte array for the specified length starting at the offset
 index, and base64 decodes into the output array starting at index 0. Returns the
 length written to output.
 
 Note: length must be a multiple of 4.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L59" id="var-source">Source</a>
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/decoding-transfer">decoding-transfer</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (decoding-transfer input-stream output-stream &amp; opts)
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L59" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/decoding-transfer">decoding-transfer</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (decoding-transfer input-stream output-stream &amp; opts)
 </pre>
-  <pre id="var-docstr">Base64 decodes from input-stream to output-stream. Returns nil or throws IOException.
+    <pre id="var-docstr">Base64 decodes from input-stream to output-stream. Returns nil or throws IOException.
 
 Options are key/value pairs and may be one of
   :buffer-size  read buffer size to use, must be a multiple of 4; default is 8192.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L260" id="var-source">Source</a>
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/enc-length">enc-length</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (enc-length n)
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L260" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/enc-length">enc-length</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (enc-length n)
 </pre>
-  <pre id="var-docstr">Calculates what would be the length after encoding of an input array of length n.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L31" id="var-source">Source</a>
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/encode">encode</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (encode input)
+    <pre id="var-docstr">Calculates what would be the length after encoding of an input array of length n.</pre>
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L31" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/encode">encode</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (encode input)
        (encode input offset length)
 </pre>
-  <pre id="var-docstr">Returns a base64 encoded byte array.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L230" id="var-source">Source</a>
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/encode!">encode!</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (encode! input offset length output)
+    <pre id="var-docstr">Returns a base64 encoded byte array.</pre>
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L230" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/encode!">encode!</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (encode! input offset length output)
 </pre>
-  <pre id="var-docstr">Reads from the input byte array for the specified length starting at the offset
+    <pre id="var-docstr">Reads from the input byte array for the specified length starting at the offset
 index, and base64 encodes into the output array starting at index 0. Returns the
 length written to output.
 
 Note: if using partial input, length must be a multiple of 3 to avoid padding.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L151" id="var-source">Source</a>
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/encoding-transfer">encoding-transfer</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (encoding-transfer input-stream output-stream &amp; opts)
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L151" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/encoding-transfer">encoding-transfer</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (encoding-transfer input-stream output-stream &amp; opts)
 </pre>
-  <pre id="var-docstr">Base64 encodes from input-stream to output-stream. Returns nil or throws IOException.
+    <pre id="var-docstr">Base64 encodes from input-stream to output-stream. Returns nil or throws IOException.
 
 Options are key/value pairs and may be one of
   :buffer-size  read buffer size to use, must be a multiple of 3; default is 6144.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L278" id="var-source">Source</a>
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="clojure.data.codec.base64/pad-length">pad-length</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (pad-length input offset length)
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L278" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.codec.base64/pad-length">pad-length</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (pad-length input offset length)
 </pre>
-  <pre id="var-docstr">Returns the length of padding on the end of the input array.</pre>
-  
-  
-  <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L49" id="var-source">Source</a>
+    <pre id="var-docstr">Returns the length of padding on the end of the input array.</pre>
+    
+    
+    <a href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L49" id="var-source">Source</a>
+  </div>
 </div>
 
 
@@ -208,7 +231,7 @@ Options are key/value pairs and may be one of
           </div>
 	</div>
 	<div id="foot">
-	  <div style="text-align: center;" id="copyright">Copyright 2007-2011 by Rich Hickey and the various contributors</div>
+	  <div style="text-align: center;" id="copyright">Copyright 2007-2012 by Rich Hickey and the various contributors</div>
 	</div>
       </div>
       <div id="DesignedBy">Logo &amp; site design by <a title="Visit Tom Hickey's website." href="http://www.tomhickey.com">Tom Hickey</a>.<br />
