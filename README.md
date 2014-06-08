@@ -14,7 +14,7 @@ Performance is on par with Java implementations, e.g., Apache commons-codec.
 
 ### Example Usage
 
-Transform a binary file into a base64 encoded file:
+#### Transform a binary file into a base64 encoded file:
 
 ```clojure
 (require '[clojure.data.codec.base64 :as b64]
@@ -23,6 +23,22 @@ Transform a binary file into a base64 encoded file:
 (with-open [in (io/input-stream "input.bin")
             out (io/output-stream "output.b64")]
   (b64/encoding-transfer in out))
+```
+
+#### Transforming strings:
+*Watch out for the encoding!
+(code borrowed from: http://stackoverflow.com/a/16781372/1391568)
+
+```clojure
+(require '[clojure.data.codec.base64 :as b64])
+
+(defn string->base64 [input]
+  "Encodes an UTF-8 string into a base64 UTF-8 string"
+  (String. (b64/encode (.getBytes input)) "UTF-8"))
+
+(defn base64->string [input]
+  "Decodes a base-64 UTF-8 string into an UTF-8 string"
+  (String. (b64/decode (.getBytes input)) "UTF-8"))
 ```
 
 ## Installation
