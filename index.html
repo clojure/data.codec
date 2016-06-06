@@ -81,6 +81,9 @@ namespace.
       <a href="#clojure.data.codec.base64/pad-length" class="toc-entry-anchor">pad-length</a>
       
     </div>
+  </div><div class="toc-section" style="margin-left: 1em;">
+    <a style="margin-top: 3px;" href="#"></a>
+    
   </div>
 </div>
 </div>
@@ -111,6 +114,7 @@ namespace.
 </pre>
     <pre id="var-docstr">Calculates what would be the length after decoding of an input array of length
 in-length with the specified padding length.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L39">Source</a>
@@ -125,6 +129,7 @@ in-length with the specified padding length.</pre>
     <pre id="var-docstr">Returns a base64 decoded byte array.
 
 Note: length must be a multiple of 4.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L139">Source</a>
@@ -140,6 +145,7 @@ index, and base64 decodes into the output array starting at index 0. Returns the
 length written to output.
 
 Note: length must be a multiple of 4.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L59">Source</a>
@@ -154,6 +160,7 @@ Note: length must be a multiple of 4.</pre>
 
 Options are key/value pairs and may be one of
   :buffer-size  read buffer size to use, must be a multiple of 4; default is 8192.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L260">Source</a>
@@ -165,6 +172,7 @@ Options are key/value pairs and may be one of
     <pre id="var-usage">Usage: (enc-length n)
 </pre>
     <pre id="var-docstr">Calculates what would be the length after encoding of an input array of length n.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L31">Source</a>
@@ -177,6 +185,7 @@ Options are key/value pairs and may be one of
        (encode input offset length)
 </pre>
     <pre id="var-docstr">Returns a base64 encoded byte array.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L230">Source</a>
@@ -192,6 +201,7 @@ index, and base64 encodes into the output array starting at index 0. Returns the
 length written to output.
 
 Note: if using partial input, length must be a multiple of 3 to avoid padding.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L151">Source</a>
@@ -206,6 +216,7 @@ Note: if using partial input, length must be a multiple of 3 to avoid padding.</
 
 Options are key/value pairs and may be one of
   :buffer-size  read buffer size to use, must be a multiple of 3; default is 6144.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L278">Source</a>
@@ -217,6 +228,7 @@ Options are key/value pairs and may be one of
     <pre id="var-usage">Usage: (pad-length input offset length)
 </pre>
     <pre id="var-docstr">Returns the length of padding on the end of the input array.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L49">Source</a>

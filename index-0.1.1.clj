@@ -2,8 +2,7 @@
  ({:doc "Functions for working with base64 encodings.",
    :author "Alex Taggart",
    :name "clojure.data.codec.base64",
-   :wiki-url
-   "http://clojure.github.com/data.codec/clojure.data.codec.base64-api.html",
+   :wiki-url "http://clojure.github.io/data.codec/index.html",
    :source-url
    "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj"}),
  :vars
@@ -20,7 +19,7 @@
    "Calculates what would be the length after decoding of an input array of length\nin-length with the specified padding length.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/dec-length"}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/dec-length"}
   {:raw-source-url
    "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
    :name "decode",
@@ -34,7 +33,7 @@
    "Returns a base64 decoded byte array.\n\nNote: length must be a multiple of 4.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/decode"}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/decode"}
   {:raw-source-url
    "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
    :name "decode!",
@@ -48,7 +47,7 @@
    "Reads from the input byte array for the specified length starting at the offset\nindex, and base64 decodes into the output array starting at index 0. Returns the\nlength written to output.\n\nNote: length must be a multiple of 4.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/decode!"}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/decode!"}
   {:raw-source-url
    "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
    :name "decoding-transfer",
@@ -62,7 +61,7 @@
    "Base64 decodes from input-stream to output-stream. Returns nil or throws IOException.\n\nOptions are key/value pairs and may be one of\n  :buffer-size  read buffer size to use, must be a multiple of 4; default is 8192.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/decoding-transfer"}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/decoding-transfer"}
   {:raw-source-url
    "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
    :name "enc-length",
@@ -76,7 +75,7 @@
    "Calculates what would be the length after encoding of an input array of length n.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/enc-length"}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/enc-length"}
   {:raw-source-url
    "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
    :name "encode",
@@ -89,7 +88,7 @@
    :doc "Returns a base64 encoded byte array.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/encode"}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/encode"}
   {:raw-source-url
    "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
    :name "encode!",
@@ -103,7 +102,7 @@
    "Reads from the input byte array for the specified length starting at the offset\nindex, and base64 encodes into the output array starting at index 0. Returns the\nlength written to output.\n\nNote: if using partial input, length must be a multiple of 3 to avoid padding.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/encode!"}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/encode!"}
   {:raw-source-url
    "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
    :name "encoding-transfer",
@@ -117,7 +116,7 @@
    "Base64 encodes from input-stream to output-stream. Returns nil or throws IOException.\n\nOptions are key/value pairs and may be one of\n  :buffer-size  read buffer size to use, must be a multiple of 3; default is 6144.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/encoding-transfer"}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/encoding-transfer"}
   {:raw-source-url
    "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
    :name "pad-length",
@@ -130,4 +129,4 @@
    :doc "Returns the length of padding on the end of the input array.",
    :namespace "clojure.data.codec.base64",
    :wiki-url
-   "http://clojure.github.com/data.codec//clojure.data.codec.base64-api.html#clojure.data.codec.base64/pad-length"})}
+   "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/pad-length"})}
