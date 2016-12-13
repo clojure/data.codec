@@ -2,12 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>data.codec</artifactId>
   <version>0.1.1-SNAPSHOT</version>
-  <name>${project.artifactId}</name>
+  <name>data.codec</name>
 
   <parent>
     <groupId>org.clojure</groupId>
     <artifactId>pom.contrib</artifactId>
-    <version>0.1.2</version>
+    <version>0.2.0</version>
   </parent>
 
   <developers>
