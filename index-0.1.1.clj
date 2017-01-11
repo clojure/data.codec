@@ -4,14 +4,14 @@
    :name "clojure.data.codec.base64",
    :wiki-url "http://clojure.github.io/data.codec/index.html",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj"}),
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj"}),
  :vars
  ({:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "dec-length",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L39",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L39",
    :line 39,
    :var-type "function",
    :arglists ([in-length pad-length]),
@@ -21,11 +21,11 @@
    :wiki-url
    "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/dec-length"}
   {:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "decode",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L139",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L139",
    :line 139,
    :var-type "function",
    :arglists ([input] [input offset length]),
@@ -35,11 +35,11 @@
    :wiki-url
    "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/decode"}
   {:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "decode!",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L59",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L59",
    :line 59,
    :var-type "function",
    :arglists ([input offset length output]),
@@ -49,11 +49,11 @@
    :wiki-url
    "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/decode!"}
   {:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "decoding-transfer",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L260",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L260",
    :line 260,
    :var-type "function",
    :arglists ([input-stream output-stream & opts]),
@@ -63,11 +63,11 @@
    :wiki-url
    "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/decoding-transfer"}
   {:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "enc-length",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L31",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L31",
    :line 31,
    :var-type "function",
    :arglists ([n]),
@@ -77,11 +77,11 @@
    :wiki-url
    "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/enc-length"}
   {:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "encode",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L230",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L230",
    :line 230,
    :var-type "function",
    :arglists ([input] [input offset length]),
@@ -90,11 +90,11 @@
    :wiki-url
    "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/encode"}
   {:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "encode!",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L151",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L151",
    :line 151,
    :var-type "function",
    :arglists ([input offset length output]),
@@ -104,11 +104,11 @@
    :wiki-url
    "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/encode!"}
   {:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "encoding-transfer",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L278",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L278",
    :line 278,
    :var-type "function",
    :arglists ([input-stream output-stream & opts]),
@@ -118,11 +118,11 @@
    :wiki-url
    "http://clojure.github.io/data.codec//index.html#clojure.data.codec.base64/encoding-transfer"}
   {:raw-source-url
-   "https://github.com/clojure/data.codec/raw/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj",
+   "https://github.com/clojure/data.codec/raw/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj",
    :name "pad-length",
    :file "src/main/clojure/clojure/data/codec/base64.clj",
    :source-url
-   "https://github.com/clojure/data.codec/blob/766746c11459a70cab27f7e0668a0be1f35fd679/src/main/clojure/clojure/data/codec/base64.clj#L49",
+   "https://github.com/clojure/data.codec/blob/0261a9a265ab637c9c07cac6693bad28201d1840/src/main/clojure/clojure/data/codec/base64.clj#L49",
    :line 49,
    :var-type "function",
    :arglists ([input offset length]),
