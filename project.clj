@@ -7,7 +7,9 @@
   :test-paths ["src/test/clojure"]
   :dependencies [[org.clojure/clojure "1.3.0"]]
   :aliases {"perf" ["with-profile" "perf" "run"]}
-  :profiles {:test {:dependencies [[commons-codec "1.5"]]}
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.8.0"]
+                                  [org.clojure/test.check "0.9.0"]
+                                  [commons-codec "1.5"]]}
              :perf {:dependencies [[commons-codec "1.5"]
                                    [criterium "0.4.3"]]
                     :source-paths ["src/perf/clojure"]

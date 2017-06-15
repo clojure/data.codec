@@ -1,99 +1,154 @@
 (ns clojure.data.codec.test-base64
   (:import org.apache.commons.codec.binary.Base64
-           [java.io ByteArrayInputStream ByteArrayOutputStream])
-  (:use clojure.test
-        clojure.data.codec.base64))
+           java.io.ByteArrayInputStream
+           java.io.ByteArrayOutputStream)
+  (:require [clojure.test.check :as tc]
+            [clojure.test.check.clojure-test :refer [defspec]]
+            [clojure.test.check.generators :as gen]
+            [clojure.test.check.properties :as prop])
+  (:use clojure.data.codec.base64))
 
 (set! *warn-on-reflection* true)
 
-(defn rand-bytes [n]
-  (->> #(byte (- (rand-int 256) 128))
-    repeatedly
-    (take n)
-    (byte-array)))
+(defmethod print-method (class (byte-array 0)) [bytes, ^java.io.Writer w]
+  (.write w "#bytes")
+  (print-method (vec bytes) w))
 
-(deftest enc-correctness
-  (doseq [n (concat (range 1 6) (range 1001 1006))]
-    (is (let [input (rand-bytes n)
-              a1 (encode input)
-              a2 (Base64/encodeBase64 input)]
-          (= (into [] a1) (into [] a2))))))
+(defn aeq?
+  ([a b]
+    (= (seq a) (seq b)))
+  ([a b len]
+    (= (take len a) (take len b))))
 
-(deftest offset-enc-correctness
-  (doseq [n (concat (range 1 6) (range 1001 1006))]
-    (doseq [off (range 1 (min n 5))]
-      (is (let [input (rand-bytes n)
-                len (- n off)
-                a1 (encode input off len)
-                input2 (byte-array len)
-                _ (System/arraycopy input off input2 0 len)
-                a2 (Base64/encodeBase64 input2)]
-            (= (into [] a1) (into [] a2)))))))
+(defn copy-bytes ^bytes [array offset length]
+  (let [arr (byte-array length)]
+    (when (pos? length)
+      (System/arraycopy array offset arr 0 length))
+    arr))
 
-(deftest buffer-enc-correctness
-  (doseq [n (concat (range 1 6) (range 1001 1006))]
-    (doseq [excess-buf-len (range 1 10)]
-      (is (let [input (rand-bytes n)
-                output (byte-array (+ (enc-length n) excess-buf-len))
-                _ (encode! input 0 n output)
-                a2 (Base64/encodeBase64 input)]
-            (= (into [] (take (enc-length n) output)) (into [] a2)))))))
+(defn expected-enc
+  (^bytes [input]
+    (Base64/encodeBase64 input))
+  (^bytes [input offset length]
+    (Base64/encodeBase64 (copy-bytes input offset length))))
 
-(deftest dec-correctness
-  (doseq [n (concat (range 1 6) (range 1001 1006))]
-    (is (let [orig (rand-bytes n)
-              enc (encode orig)
-              deco (decode enc)]
-          (= (into [] deco) (into [] orig))))))
+(defn expected-dec
+  (^bytes [^bytes input]
+    (Base64/decodeBase64 input))
+  (^bytes [input offset length]
+    (Base64/decodeBase64 (copy-bytes input offset length))))
 
-(deftest offset-dec-correctness
-  (doseq [n (concat (range 1 6) (range 1001 1006))]
-    (doseq [off (range 1 (min n 5))]
-      (is (let [orig (rand-bytes n)
-                enc (byte-array (concat (repeat off (byte 0)) (encode orig)))
-                deco (decode enc off (- (alength enc) off))]
-            (= (into [] deco) (into [] orig)))))))
+(defn gen-discrete [min max base]
+  (let [min (quot min base)
+        max (quot max base)]
+    (gen/fmap #(* base %) (gen/large-integer* {:min min :max max}))))
 
-(deftest buffer-dec-correctness
-  (doseq [n (concat (range 1 6) (range 1001 1006))]
-    (doseq [excess-buf-len (range 1 10)]
-      (is (let [orig (rand-bytes n)
-                enc (encode orig)
-                deco (byte-array (+ n excess-buf-len))
-                _ (decode! enc 0 (alength ^bytes enc) deco)]
-            (= (into [] (take n deco)) (into [] orig)))))))
+(defn gen-with-offset-length [gen-array step]
+  (gen/bind gen-array
+    (fn [^bytes array]
+      (if (zero? (alength array))
+        (gen/tuple (gen/return array)
+                   (gen/return -1)
+                   (gen/return 0))
+        (gen/bind (gen-discrete 0 (dec (alength array)) step)
+                  (fn [len]
+                    (gen/tuple
+                      (gen/return array)
+                      (gen-discrete 0 (- (alength array) len) step)
+                      (gen/return len))))))))
 
-(deftest bad-buf-encoding-transfer
-  (is (thrown-with-msg? IllegalArgumentException #"Buffer size must be a multiple of"
-    (encoding-transfer nil nil :buffer-size 5))))
+(def gen-bytes-offset-length (gen-with-offset-length gen/bytes 1))
 
-(deftest bad-buf-decoding-transfer
-  (is (thrown-with-msg? IllegalArgumentException #"Buffer size must be a multiple of"
-    (decoding-transfer nil nil :buffer-size 5))))
+(def gen-encbytes (gen/fmap #(Base64/encodeBase64 %) gen/bytes))
 
-(deftest fit-encoding-transfer
-  (let [raw (rand-bytes 3)
-        in (ByteArrayInputStream. raw)
-        out (ByteArrayOutputStream.)]
-    (encoding-transfer in out :buffer-size 3)
-    (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
+(def gen-encbytes-offset-length (gen-with-offset-length gen-encbytes 4))
 
-(deftest split-encoding-transfer
-  (let [raw (rand-bytes 4)
-        in (ByteArrayInputStream. raw)
-        out (ByteArrayOutputStream.)]
-    (encoding-transfer in out :buffer-size 3)
-    (is (= (into [] (.toByteArray out)) (into [] (encode raw))))))
+(defspec check-encode!
+  (prop/for-all [[^bytes input offset length] gen-bytes-offset-length]
+    (let [dest (byte-array (* 2 (alength input)))
+          enc-len (encode! input offset length dest)
+          exp (expected-enc input offset length)]
+      (and (= enc-len (alength exp))
+           (aeq? dest exp enc-len)))))
 
-(deftest fit-decoding-transfer
-  (let [raw (rand-bytes 3)
-        enc (encode raw)
-        in (ByteArrayInputStream. enc)
-        out (ByteArrayOutputStream.)]
-    (decoding-transfer in out :buffer-size 4)
-    (is (= (into [] (.toByteArray out)) (into [] raw)))))
+(defspec check-encode-1
+  (prop/for-all [^bytes input gen/bytes]
+    (let [enc (encode input)
+          exp (expected-enc input)]
+      (aeq? enc exp))))
 
+(defspec check-encode-3
+  (prop/for-all [[^bytes input offset length] gen-bytes-offset-length]
+    (let [enc (encode input offset length)
+          exp (expected-enc input offset length)]
+      (aeq? enc exp))))
 
+(defspec check-decode!
+  (prop/for-all [[^bytes input offset length] gen-encbytes-offset-length]
+		(let [dest (byte-array (alength input))
+		      dec-len (decode! input offset length dest)
+		      exp (expected-dec input offset length)]
+		  (and (= dec-len (alength exp))
+		       (aeq? dest exp dec-len)))))
 
+(defspec check-decode-1
+  (prop/for-all [^bytes input gen-encbytes]
+		(let [dec (decode input)
+		      exp (expected-dec input)]
+		  (aeq? dec exp))))
 
+(defspec check-decode-3
+  (prop/for-all [[^bytes input offset length] gen-encbytes-offset-length]
+		(let [dec (decode input offset length)
+		      exp (expected-dec input offset length)]
+		  (aeq? dec exp))))
 
+(defspec check-encoding-transfer-default-buffer-size
+  (prop/for-all [input gen/bytes]
+    (let [in (ByteArrayInputStream. input)
+          out (ByteArrayOutputStream.)]
+      (encoding-transfer in out)
+      (aeq? (.toByteArray out) (expected-enc input)))))
+
+(defspec check-encoding-transfer-buffer-size
+  (prop/for-all [input gen/bytes
+                 buffer-size (gen/fmap #(* 3 %) (gen/fmap inc gen/nat))]
+    (let [in (ByteArrayInputStream. input)
+          out (ByteArrayOutputStream.)]
+      (encoding-transfer in out :buffer-size buffer-size)
+      (aeq? (.toByteArray out) (expected-enc input)))))
+
+(defspec check-encoding-transfer-bad-buffer-size
+  (prop/for-all [input gen/bytes]
+    (let [in (ByteArrayInputStream. input)
+          out (ByteArrayOutputStream.)]
+      (try
+        (encoding-transfer in out :buffer-size 2)
+        false
+        (catch IllegalArgumentException _
+          true)))))
+
+(defspec check-decoding-transfer-default-buffer-size
+  (prop/for-all [input gen-encbytes]
+    (let [in (ByteArrayInputStream. input)
+          out (ByteArrayOutputStream.)]
+      (decoding-transfer in out)
+      (aeq? (.toByteArray out) (expected-dec input)))))
+
+(defspec check-decoding-transfer-buffer-size
+  (prop/for-all [input gen-encbytes
+                 buffer-size (gen/fmap #(* 4 %) (gen/fmap inc gen/nat))]
+    (let [in (ByteArrayInputStream. input)
+          out (ByteArrayOutputStream.)]
+      (decoding-transfer in out :buffer-size buffer-size)
+      (aeq? (.toByteArray out) (expected-dec input)))))
+
+(defspec check-decoding-transfer-bad-buffer-size
+  (prop/for-all [input gen-encbytes]
+    (let [in (ByteArrayInputStream. input)
+          out (ByteArrayOutputStream.)]
+      (try
+        (decoding-transfer in out :buffer-size 2)
+        false
+        (catch IllegalArgumentException _
+          true)))))
