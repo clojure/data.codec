@@ -25,7 +25,7 @@
 (def ^:private ^"[B" dec-bytes
   (let [^bytes ba (byte-array (inc (apply max enc-bytes)))]
     (doseq [[idx enc] (map-indexed vector enc-bytes)]
-      (aset ba enc (byte idx)))
+      (aset ba enc (unchecked-byte idx)))
     ba))
 
 (defn enc-length
@@ -98,9 +98,9 @@
                 x (bit-or x1 x2)
                 y (bit-or y1 y2)
                 z (bit-or z1 z2)]
-            (aset output j (byte x))
-            (aset output (inc j) (byte y))
-            (aset output (+ 2 j) (byte z)))
+            (aset output j (unchecked-byte x))
+            (aset output (inc j) (unchecked-byte y))
+            (aset output (+ 2 j) (unchecked-byte z)))
           (recur (+ 4 i) (+ 3 j))))
       ; handle padded section
       (case tail-len
@@ -116,7 +116,7 @@
                      (bit-shift-right 4)
                      (bit-and 0x3))
                 x (bit-or x1 x2)]
-            (aset output j (byte x)))
+            (aset output j (unchecked-byte x)))
         2 (let [i (- in-end 3)
                 j (dec out-end)
                 a (long (aget dec-bytes (aget input i)))
@@ -136,8 +136,8 @@
                      (bit-and 0xF))
                 x (bit-or x1 x2)
                 y (bit-or y1 y2)]
-            (aset output j (byte x))
-            (aset output (inc j) (byte y))))
+            (aset output j (unchecked-byte x))
+            (aset output (inc j) (unchecked-byte y))))
       out-len)))
 
 (defn decode
@@ -208,8 +208,8 @@
                      (bit-shift-left 4))]
             (aset output j (aget enc-bytes a))
             (aset output (inc j) (aget enc-bytes b1))
-            (aset output (+ 2 j) (byte 61))
-            (aset output (+ 3 j) (byte 61)))
+            (aset output (+ 2 j) (unchecked-byte 61))
+            (aset output (+ 3 j) (unchecked-byte 61)))
         2 (let [i (dec in-end)
                 j (- out-end 3)
                 x (long (aget input i))
@@ -230,7 +230,7 @@
             (aset output j (aget enc-bytes a))
             (aset output (inc j) (aget enc-bytes b))
             (aset output (+ 2 j) (aget enc-bytes c1))
-            (aset output (+ 3 j) (byte 61))))
+            (aset output (+ 3 j) (unchecked-byte 61))))
       out-len)))
 
 (defn encode
