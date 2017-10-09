@@ -2,7 +2,8 @@
   (:import org.apache.commons.codec.binary.Base64
            java.io.ByteArrayInputStream
            java.io.ByteArrayOutputStream)
-  (:require [clojure.test.check :as tc]
+  (:require [clojure.test :refer [deftest is]] 
+            [clojure.test.check :as tc]
             [clojure.test.check.clojure-test :refer [defspec]]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop])
@@ -71,6 +72,9 @@
       (and (= enc-len (alength exp))
            (aeq? dest exp enc-len)))))
 
+(deftest test-encode!-prim
+  (is (instance? clojure.lang.IFn$OLLOL encode!)))
+
 (defspec check-encode-1
   (prop/for-all [^bytes input gen/bytes]
     (let [enc (encode input)
@@ -90,6 +94,9 @@
 		      exp (expected-dec input offset length)]
 		  (and (= dec-len (alength exp))
 		       (aeq? dest exp dec-len)))))
+
+(deftest test-decode!-prim
+  (is (instance? clojure.lang.IFn$OLLOL decode!)))
 
 (defspec check-decode-1
   (prop/for-all [^bytes input gen-encbytes]
