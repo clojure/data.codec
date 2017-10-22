@@ -5,10 +5,9 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src/main/clojure"]
   :test-paths ["src/test/clojure"]
-  :dependencies [[org.clojure/clojure "1.3.0"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]]
   :aliases {"perf" ["with-profile" "perf" "run"]}
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.8.0"]
-                                  [org.clojure/test.check "0.9.0"]
+  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]
                                   [commons-codec "1.5"]]
                    :plugins [[lein-cloverage "1.0.9"]]}
              :perf {:dependencies [[commons-codec "1.5"]
