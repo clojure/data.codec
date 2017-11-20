@@ -67,14 +67,12 @@
   ^long [^bytes input ^long offset ^long length ^bytes output]
   (if (zero? length)
     0
-    (let [in-end (+ offset length -1)
-          pad-len (pad-length input offset length)
+    (let [pad-len (pad-length input offset length)
           out-len (dec-length length pad-len)
-          out-end (dec out-len)
           tail-len (rem out-len 3)
           loop-lim (- out-len tail-len)]
       (loop [i offset j 0]
-        (when (< j loop-lim)
+        (if (< j loop-lim)
           (let [a (long (aget dec-bytes (aget input i)))
                 b (long (aget dec-bytes (aget input (inc i))))
                 c (long (aget dec-bytes (aget input (+ 2 i))))
@@ -100,45 +98,43 @@
                 z (bit-or z1 z2)]
             (aset output j (unchecked-byte x))
             (aset output (inc j) (unchecked-byte y))
-            (aset output (+ 2 j) (unchecked-byte z)))
-          (recur (+ 4 i) (+ 3 j))))
-      ; handle padded section
-      (case tail-len
-        0 nil
-        1 (let [i (- in-end 3)
-                j out-end
-                a (long (aget dec-bytes (aget input i)))
-                b (long (aget dec-bytes (aget input (inc i))))
-                x1 (-> a
-                     (bit-and 0x3F)
-                     (bit-shift-left 2))
-                x2 (-> b
-                     (bit-shift-right 4)
-                     (bit-and 0x3))
-                x (bit-or x1 x2)]
-            (aset output j (unchecked-byte x)))
-        2 (let [i (- in-end 3)
-                j (dec out-end)
-                a (long (aget dec-bytes (aget input i)))
-                b (long (aget dec-bytes (aget input (inc i))))
-                c (long (aget dec-bytes (aget input (+ 2 i))))
-                x1 (-> a
-                     (bit-and 0x3F)
-                     (bit-shift-left 2))
-                x2 (-> b
-                     (bit-shift-right 4)
-                     (bit-and 0x3))
-                y1 (->
-                     (bit-and b 0xF)
-                     (bit-shift-left 4))
-                y2 (-> c
-                     (bit-shift-right 2)
-                     (bit-and 0xF))
-                x (bit-or x1 x2)
-                y (bit-or y1 y2)]
-            (aset output j (unchecked-byte x))
-            (aset output (inc j) (unchecked-byte y))))
-      out-len)))
+            (aset output (+ 2 j) (unchecked-byte z))
+            (recur (+ 4 i) (+ 3 j)))
+
+          ; handle padded section
+          (case tail-len
+            0 j
+            1 (let [a (long (aget dec-bytes (aget input i)))
+                    b (long (aget dec-bytes (aget input (inc i))))
+                    x1 (-> a
+                         (bit-and 0x3F)
+                         (bit-shift-left 2))
+                    x2 (-> b
+                         (bit-shift-right 4)
+                         (bit-and 0x3))
+                    x (bit-or x1 x2)]
+                (aset output j (unchecked-byte x))
+                (inc j))
+            2 (let [a (long (aget dec-bytes (aget input i)))
+                    b (long (aget dec-bytes (aget input (inc i))))
+                    c (long (aget dec-bytes (aget input (+ 2 i))))
+                    x1 (-> a
+                         (bit-and 0x3F)
+                         (bit-shift-left 2))
+                    x2 (-> b
+                         (bit-shift-right 4)
+                         (bit-and 0x3))
+                    y1 (->
+                         (bit-and b 0xF)
+                         (bit-shift-left 4))
+                    y2 (-> c
+                         (bit-shift-right 2)
+                         (bit-and 0xF))
+                    x (bit-or x1 x2)
+                    y (bit-or y1 y2)]
+                (aset output j (unchecked-byte x))
+                (aset output (inc j) (unchecked-byte y))
+                (+ 2 j))))))))
 
 (defn decode
   "Returns a base64 decoded byte array.
@@ -162,12 +158,9 @@
   (if (zero? length)
     0
     (let [tail-len (rem length 3)
-          loop-lim (- (+ offset length) tail-len)
-          in-end (dec (+ offset length))
-          out-len (enc-length length)
-          out-end (dec out-len)]
+          loop-lim (- (+ offset length) tail-len)]
       (loop [i offset j 0]
-        (when (< i loop-lim)
+        (if (< i loop-lim)
           (let [x (long (aget input i))
                 y (long (aget input (inc i)))
                 z (long (aget input (+ 2 i)))
@@ -192,46 +185,44 @@
             (aset output j (aget enc-bytes a))
             (aset output (inc j) (aget enc-bytes b))
             (aset output (+ 2 j) (aget enc-bytes c))
-            (aset output (+ 3 j) (aget enc-bytes d)))
-          (recur (+ 3 i) (+ 4 j))))
-      ; write padded section
-      (case tail-len
-        0 nil
-        1 (let [i in-end
-                j (- out-end 3)
-                x (long (aget input i))
-                a (-> x
-                    (bit-shift-right 2)
-                    (bit-and 0x3F))
-                b1 (-> x
-                     (bit-and 0x3)
-                     (bit-shift-left 4))]
-            (aset output j (aget enc-bytes a))
-            (aset output (inc j) (aget enc-bytes b1))
-            (aset output (+ 2 j) (unchecked-byte 61))
-            (aset output (+ 3 j) (unchecked-byte 61)))
-        2 (let [i (dec in-end)
-                j (- out-end 3)
-                x (long (aget input i))
-                y (long (aget input (inc i)))
-                a (-> x
-                    (bit-shift-right 2)
-                    (bit-and 0x3F))
-                b1 (-> x
-                     (bit-and 0x3)
-                     (bit-shift-left 4))
-                b2 (-> y
-                     (bit-shift-right 4)
-                     (bit-and 0xF))
-                b (bit-or b1 b2)
-                c1 (-> y
-                     (bit-and 0xF)
-                     (bit-shift-left 2))]
-            (aset output j (aget enc-bytes a))
-            (aset output (inc j) (aget enc-bytes b))
-            (aset output (+ 2 j) (aget enc-bytes c1))
-            (aset output (+ 3 j) (unchecked-byte 61))))
-      out-len)))
+            (aset output (+ 3 j) (aget enc-bytes d))
+            (recur (+ 3 i) (+ 4 j)))
+
+          ; write padded section
+          (case tail-len
+            0 j
+            1 (let [x (long (aget input i))
+                    a (-> x
+                        (bit-shift-right 2)
+                        (bit-and 0x3F))
+                    b1 (-> x
+                         (bit-and 0x3)
+                         (bit-shift-left 4))]
+                (aset output j (aget enc-bytes a))
+                (aset output (inc j) (aget enc-bytes b1))
+                (aset output (+ 2 j) (unchecked-byte 61))
+                (aset output (+ 3 j) (unchecked-byte 61))
+                (+ 4 j))
+            2 (let [x (long (aget input i))
+                    y (long (aget input (inc i)))
+                    a (-> x
+                        (bit-shift-right 2)
+                        (bit-and 0x3F))
+                    b1 (-> x
+                         (bit-and 0x3)
+                         (bit-shift-left 4))
+                    b2 (-> y
+                         (bit-shift-right 4)
+                         (bit-and 0xF))
+                    b (bit-or b1 b2)
+                    c1 (-> y
+                         (bit-and 0xF)
+                         (bit-shift-left 2))]
+                (aset output j (aget enc-bytes a))
+                (aset output (inc j) (aget enc-bytes b))
+                (aset output (+ 2 j) (aget enc-bytes c1))
+                (aset output (+ 3 j) (unchecked-byte 61))
+                (+ 4 j))))))))
 
 (defn encode
   "Returns a base64 encoded byte array."
