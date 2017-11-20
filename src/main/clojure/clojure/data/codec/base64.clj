@@ -148,6 +148,15 @@
      dest)))
 
 
+(defn str->decode
+  "Returns a decoded byte array from the given base64 encoded string.
+
+  Note: length must be a multiple of 4."
+  ([^String input]
+   (let [bytes (.getBytes input "US-ASCII")]
+     (decode bytes 0 (alength bytes)))))
+
+
 (defn encode!
   "Reads from the input byte array for the specified length starting at the offset
    index, and base64 encodes into the output array starting at index 0. Returns the
@@ -232,6 +241,15 @@
    (let [dest (byte-array (enc-length length))]
      (encode! input offset length dest)
      dest)))
+
+(defn encode->str
+  "Returns a base64 encoded string of the provided byte array."
+  ([^bytes input]
+   (encode->str input 0 (alength input)))
+  ([^bytes input ^long offset ^long length]
+   (let [dest (byte-array (enc-length length))]
+     (encode! input offset length dest)
+     (String. dest "US-ASCII"))))
 
 
 (defn- read-fully

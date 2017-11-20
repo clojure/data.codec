@@ -33,11 +33,21 @@
   (^bytes [input offset length]
    (Base64/encodeBase64 (copy-bytes input offset length))))
 
+(defn expected-enc-str
+  (^bytes [input]
+   (Base64/encodeBase64String input))
+  (^bytes [input offset length]
+   (Base64/encodeBase64String (copy-bytes input offset length))))
+
 (defn expected-dec
   (^bytes [^bytes input]
    (Base64/decodeBase64 input))
   (^bytes [input offset length]
    (Base64/decodeBase64 (copy-bytes input offset length))))
+
+(defn expected-str-dec
+  ^bytes [^String input]
+  (Base64/decodeBase64 input))
 
 (defn gen-discrete [min max base]
   (let [min (quot min base)
@@ -61,6 +71,8 @@
 (def gen-bytes-offset-length (gen-with-offset-length gen/bytes 1))
 
 (def gen-encbytes (gen/fmap #(Base64/encodeBase64 %) gen/bytes))
+
+(def gen-encstr (gen/fmap #(Base64/encodeBase64String %) gen/bytes))
 
 (def gen-encbytes-offset-length (gen-with-offset-length gen-encbytes 4))
 
@@ -87,6 +99,18 @@
           exp (expected-enc input offset length)]
       (aeq? enc exp))))
 
+(defspec check-encode->str-1
+  (prop/for-all [^bytes input gen/bytes]
+    (let [enc (encode->str input)
+          exp (expected-enc-str input)]
+      (= enc exp))))
+
+(defspec check-encode->str-3
+  (prop/for-all [[^bytes input offset length] gen-bytes-offset-length]
+    (let [enc (encode->str input offset length)
+          exp (expected-enc-str input offset length)]
+      (= enc exp))))
+
 (defspec check-decode!
   (prop/for-all [[^bytes input offset length] gen-encbytes-offset-length]
     (let [dest    (byte-array (alength input))
@@ -108,6 +132,12 @@
   (prop/for-all [[^bytes input offset length] gen-encbytes-offset-length]
     (let [dec (decode input offset length)
           exp (expected-dec input offset length)]
+      (aeq? dec exp))))
+
+(defspec check-str->decode
+  (prop/for-all [^String input gen-encstr]
+    (let [dec (str->decode input)
+          exp (expected-str-dec input)]
       (aeq? dec exp))))
 
 (defspec check-encoding-transfer-default-buffer-size
