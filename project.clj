@@ -1,4 +1,4 @@
-(defproject org.clojure/data.codec "0.1.1-SNAPSHOT"
+(defproject org.clojure/data.codec "0.1.2-SNAPSHOT"
   :description "Clojure codec implementations."
   :url "https://github.com/clojure/data.codec"
   :license {:name "Eclipse Public License"
