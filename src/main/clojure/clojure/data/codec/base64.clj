@@ -10,8 +10,8 @@
 ;; remove this notice, or any other, from this software.
 
 (ns ^{:author "Alex Taggart"
-      :doc "Functions for working with base64 encodings."}
-  clojure.data.codec.base64
+      :doc    "Functions for working with base64 encodings."}
+    clojure.data.codec.base64
   (:import [java.io InputStream OutputStream]))
 
 (set! *unchecked-math* true)
@@ -20,7 +20,7 @@
 (def ^:private ^"[B" enc-bytes
   (byte-array
     (map (comp byte int)
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")))
+         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")))
 
 (def ^:private ^"[B" dec-bytes
   (let [^bytes ba (byte-array (inc (apply max enc-bytes)))]
@@ -67,16 +67,16 @@
   ^long [^bytes input ^long offset ^long length ^bytes output]
   (if (zero? length)
     0
-    (let [pad-len (pad-length input offset length)
-          out-len (dec-length length pad-len)
+    (let [pad-len  (pad-length input offset length)
+          out-len  (dec-length length pad-len)
           tail-len (rem out-len 3)
           loop-lim (- out-len tail-len)]
       (loop [i offset j 0]
         (if (< j loop-lim)
-          (let [a (long (aget dec-bytes (aget input i)))
-                b (long (aget dec-bytes (aget input (inc i))))
-                c (long (aget dec-bytes (aget input (+ 2 i))))
-                d (long (aget dec-bytes (aget input (+ 3 i))))
+          (let [a  (long (aget dec-bytes (aget input i)))
+                b  (long (aget dec-bytes (aget input (inc i))))
+                c  (long (aget dec-bytes (aget input (+ 2 i))))
+                d  (long (aget dec-bytes (aget input (+ 3 i))))
                 x1 (-> a
                      (bit-and 0x3F)
                      (bit-shift-left 2))
@@ -93,9 +93,9 @@
                      (bit-and 0x3)
                      (bit-shift-left 6))
                 z2 (bit-and d 0x3F)
-                x (bit-or x1 x2)
-                y (bit-or y1 y2)
-                z (bit-or z1 z2)]
+                x  (bit-or x1 x2)
+                y  (bit-or y1 y2)
+                z  (bit-or z1 z2)]
             (aset output j (unchecked-byte x))
             (aset output (inc j) (unchecked-byte y))
             (aset output (+ 2 j) (unchecked-byte z))
@@ -104,20 +104,20 @@
           ; handle padded section
           (case tail-len
             0 j
-            1 (let [a (long (aget dec-bytes (aget input i)))
-                    b (long (aget dec-bytes (aget input (inc i))))
+            1 (let [a  (long (aget dec-bytes (aget input i)))
+                    b  (long (aget dec-bytes (aget input (inc i))))
                     x1 (-> a
                          (bit-and 0x3F)
                          (bit-shift-left 2))
                     x2 (-> b
                          (bit-shift-right 4)
                          (bit-and 0x3))
-                    x (bit-or x1 x2)]
+                    x  (bit-or x1 x2)]
                 (aset output j (unchecked-byte x))
                 (inc j))
-            2 (let [a (long (aget dec-bytes (aget input i)))
-                    b (long (aget dec-bytes (aget input (inc i))))
-                    c (long (aget dec-bytes (aget input (+ 2 i))))
+            2 (let [a  (long (aget dec-bytes (aget input i)))
+                    b  (long (aget dec-bytes (aget input (inc i))))
+                    c  (long (aget dec-bytes (aget input (+ 2 i))))
                     x1 (-> a
                          (bit-and 0x3F)
                          (bit-shift-left 2))
@@ -130,8 +130,8 @@
                     y2 (-> c
                          (bit-shift-right 2)
                          (bit-and 0xF))
-                    x (bit-or x1 x2)
-                    y (bit-or y1 y2)]
+                    x  (bit-or x1 x2)
+                    y  (bit-or y1 y2)]
                 (aset output j (unchecked-byte x))
                 (aset output (inc j) (unchecked-byte y))
                 (+ 2 j))))))))
@@ -141,11 +141,11 @@
 
   Note: length must be a multiple of 4."
   ([^bytes input]
-    (decode input 0 (alength input)))
+   (decode input 0 (alength input)))
   ([^bytes input ^long offset ^long length]
-    (let [dest (byte-array (dec-length length (pad-length input offset length)))]
-      (decode! input offset length dest)
-      dest)))
+   (let [dest (byte-array (dec-length length (pad-length input offset length)))]
+     (decode! input offset length dest)
+     dest)))
 
 
 (defn encode!
@@ -161,27 +161,27 @@
           loop-lim (- (+ offset length) tail-len)]
       (loop [i offset j 0]
         (if (< i loop-lim)
-          (let [x (long (aget input i))
-                y (long (aget input (inc i)))
-                z (long (aget input (+ 2 i)))
-                a (-> x
-                    (bit-shift-right 2)
-                    (bit-and 0x3F))
+          (let [x  (long (aget input i))
+                y  (long (aget input (inc i)))
+                z  (long (aget input (+ 2 i)))
+                a  (-> x
+                     (bit-shift-right 2)
+                     (bit-and 0x3F))
                 b1 (-> x
                      (bit-and 0x3)
                      (bit-shift-left 4))
                 b2 (-> y
                      (bit-shift-right 4)
                      (bit-and 0xF))
-                b (bit-or b1 b2)
+                b  (bit-or b1 b2)
                 c1 (-> y
                      (bit-and 0xF)
                      (bit-shift-left 2))
                 c2 (-> z
                      (bit-shift-right 6)
                      (bit-and 0x3))
-                c (bit-or c1 c2)
-                d (bit-and z 0x3F)]
+                c  (bit-or c1 c2)
+                d  (bit-and z 0x3F)]
             (aset output j (aget enc-bytes a))
             (aset output (inc j) (aget enc-bytes b))
             (aset output (+ 2 j) (aget enc-bytes c))
@@ -191,10 +191,10 @@
           ; write padded section
           (case tail-len
             0 j
-            1 (let [x (long (aget input i))
-                    a (-> x
-                        (bit-shift-right 2)
-                        (bit-and 0x3F))
+            1 (let [x  (long (aget input i))
+                    a  (-> x
+                         (bit-shift-right 2)
+                         (bit-and 0x3F))
                     b1 (-> x
                          (bit-and 0x3)
                          (bit-shift-left 4))]
@@ -203,18 +203,18 @@
                 (aset output (+ 2 j) (unchecked-byte 61))
                 (aset output (+ 3 j) (unchecked-byte 61))
                 (+ 4 j))
-            2 (let [x (long (aget input i))
-                    y (long (aget input (inc i)))
-                    a (-> x
-                        (bit-shift-right 2)
-                        (bit-and 0x3F))
+            2 (let [x  (long (aget input i))
+                    y  (long (aget input (inc i)))
+                    a  (-> x
+                         (bit-shift-right 2)
+                         (bit-and 0x3F))
                     b1 (-> x
                          (bit-and 0x3)
                          (bit-shift-left 4))
                     b2 (-> y
                          (bit-shift-right 4)
                          (bit-and 0xF))
-                    b (bit-or b1 b2)
+                    b  (bit-or b1 b2)
                     c1 (-> y
                          (bit-and 0xF)
                          (bit-shift-left 2))]
@@ -227,11 +227,11 @@
 (defn encode
   "Returns a base64 encoded byte array."
   ([^bytes input]
-    (encode input 0 (alength input)))
+   (encode input 0 (alength input)))
   ([^bytes input ^long offset ^long length]
-    (let [dest (byte-array (enc-length length))]
-      (encode! input offset length dest)
-      dest)))
+   (let [dest (byte-array (enc-length length))]
+     (encode! input offset length dest)
+     dest)))
 
 
 (defn- read-fully
@@ -260,11 +260,11 @@
   Options are key/value pairs and may be one of
     :buffer-size  read buffer size to use, must be a multiple of 4; default is 8192."
   [^InputStream input-stream ^OutputStream output-stream & opts]
-  (let [opts (when opts (apply hash-map opts))
-        in-size (buf-size opts 8192 4)
+  (let [opts     (when opts (apply hash-map opts))
+        in-size  (buf-size opts 8192 4)
         out-size (if (== in-size 8192) 6144 (dec-length in-size 0))
-        in-buf (byte-array in-size)
-        out-buf (byte-array out-size)]
+        in-buf   (byte-array in-size)
+        out-buf  (byte-array out-size)]
     (loop []
       (let [in-size (read-fully input-stream in-buf)]
         (when (pos? in-size)
@@ -278,11 +278,11 @@
   Options are key/value pairs and may be one of
     :buffer-size  read buffer size to use, must be a multiple of 3; default is 6144."
   [^InputStream input-stream ^OutputStream output-stream & opts]
-  (let [opts (when opts (apply hash-map opts))
-        in-size (buf-size opts 6144 3)
+  (let [opts     (when opts (apply hash-map opts))
+        in-size  (buf-size opts 6144 3)
         out-size (if (== in-size 6144) 8192 (enc-length in-size))
-        in-buf (byte-array in-size)
-        out-buf (byte-array out-size)]
+        in-buf   (byte-array in-size)
+        out-buf  (byte-array out-size)]
     (loop []
       (let [in-size (read-fully input-stream in-buf)]
         (when (pos? in-size)
