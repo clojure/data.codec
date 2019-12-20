@@ -6,6 +6,8 @@ API documentation: http://clojure.github.com/data.codec
 
 ## base64
 
+NOTE: Superseded by [Base64](https://docs.oracle.com/javase/8/docs/api/java/util/Base64.html), included in the JDK since Java 8.
+
 Implements the standard base64 encoding character set, but does not yet support automatic fixed line-length encoding.
 
 All operations work on either byte arrays or Input/OutputStreams.
