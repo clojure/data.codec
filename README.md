@@ -2,7 +2,7 @@
 
 Native codec implementations. Currently only base64 has been implemented.
 
-API documentation: http://clojure.github.com/data.codec
+API documentation: https://clojure.github.io/data.codec
 
 ## base64
 
