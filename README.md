@@ -43,6 +43,6 @@ or your leiningen `project.clj`:
 
 ## License
 
-Copyright © 2011 Alex Taggart
+Copyright © 2023 Alex Taggart, Rich Hickey, and contributors
 
 Licensed under the EPL. (See the file epl.html.)
