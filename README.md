@@ -34,12 +34,12 @@ The data.codec library is available in Maven central.  Add it to your Maven proj
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.codec</artifactId>
-      <version>0.1.1</version>
+      <version>0.2.1</version>
     </dependency>
 
 or your leiningen `project.clj`:
 
-    [org.clojure/data.codec "0.1.1"]
+    [org.clojure/data.codec "0.2.1"]
 
 ## License
 
