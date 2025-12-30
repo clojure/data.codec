@@ -3,6 +3,7 @@
   <artifactId>data.codec</artifactId>
   <version>0.2.1-SNAPSHOT</version>
   <name>data.codec</name>
+  <description>Native codec implementations.</description>  
 
   <parent>
     <groupId>org.clojure</groupId>
